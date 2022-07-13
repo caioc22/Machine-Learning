@@ -1,0 +1,48 @@
+# Data Preprocessing Template
+
+# Importing the dataset
+dataset = read.csv('DataScience/Salary_Data.csv')
+
+# Splitting the dataset into the Training set and Test set
+# install.packages('caTools')
+library(caTools)
+set.seed(123)
+split = sample.split(dataset$Salary, SplitRatio = 0.8)
+training_set = subset(dataset, split == TRUE)
+test_set = subset(dataset, split == FALSE)
+
+# Feature Scaling
+# training_set = scale(training_set)
+# test_set = scale(test_set)
+
+#Fitting Simple Linear Regression to the Training Set
+regressor = lm(formula = Salary ~ YearsExperience,
+               data = training_set)
+
+#Predicting the Test set results
+y_pred = predict(regressor, newdata = test_set)
+
+#Visualising Traning results
+library(ggplot2)
+ggplot() +
+  geom_point(aes(x = training_set$YearsExperience, y = training_set$Salary),
+             colour = 'red') +
+  geom_line(aes(x = training_set$YearsExperience, y = predict(regressor, newdata = training_set)),
+            colour = 'blue') +
+  ggtitle('Salary vs Experience (Training Set)')+
+  xlab('Years of Experience')+
+  ylab('Salary')
+
+#Visualising Test results
+library(ggplot2)
+ggplot() +
+  geom_point(aes(x = test_set$YearsExperience, y = test_set$Salary),
+             colour = 'red') +
+  geom_line(aes(x = training_set$YearsExperience, y = predict(regressor, newdata = training_set)),
+            colour = 'blue') +
+  ggtitle('Salary vs Experience (Test Set)') +
+  xlab('Years of Experience') +
+  ylab('Salary')  
+
+# the linear model is plotted in relation to the training set 'cause we are working
+# with all data to plot the graph, no some part
